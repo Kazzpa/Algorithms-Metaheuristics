@@ -5,3 +5,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+/Algorithms/nbproject/private/
