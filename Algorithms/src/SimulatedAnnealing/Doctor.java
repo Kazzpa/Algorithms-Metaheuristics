@@ -5,8 +5,6 @@
  */
 package SimulatedAnnealing;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  *
@@ -14,19 +12,24 @@ import java.util.LinkedList;
  */
 public class Doctor {
 
-    public LinkedList<Patient> asignated;
     public int Salary;
+    public int numPacientes;
     public double x;
     public double y;
 
-    public Doctor(int Sueldo, double x, double y) {
+    public Doctor(int Sueldo,int numPacientes, double x, double y) {
         this.Salary = Sueldo;
+        this.numPacientes = numPacientes;
         this.x = x;
         this.y = y;
     }
 
     public int getSalary() {
         return Salary;
+    }
+
+    public int getNumPacientes() {
+        return numPacientes;
     }
 
     public double getX() {
@@ -40,7 +43,12 @@ public class Doctor {
     public void setSalary(int Salary) {
         this.Salary = Salary;
     }
+//
+//    public void setNumPacientes(int numPacientes) {
+//        this.numPacientes = numPacientes;
+//    }
 
+    
     public void setX(double x) {
         this.x = x;
     }
@@ -49,29 +57,20 @@ public class Doctor {
         this.y = y;
     }
 
-    public void addPatient(Patient p) {
-        if (!asignated.contains(p)) {
-            asignated.add(p);
-        }
-    }
-
-    public void removePatient(Patient p) {
-        asignated.remove(p);
-    }
-
-    public double getDistance() {
-        double totalDistance = 0;
-        Iterator it = asignated.iterator();
-        while (it.hasNext()) {
-            Patient p = (Patient) it.next();
-            totalDistance += getDistance(p);
-        }
-        return totalDistance;
-    }
-
-    public double getDistance(Patient p) {
-        double res = 0;
-        res = Math.sqrt( Math.pow( Math.abs( x - p.getX()), 2) + Math.pow( Math.abs( y - p.getY() ), 2));
-        return res;
-    }
+    //CALCULATEDISTANCETOPATIENTS
+//    public double getDistance() {
+//        double totalDistance = 0;
+//        Iterator it = asignated.iterator();
+//        while (it.hasNext()) {
+//            Patient p = (Patient) it.next();
+//            totalDistance += getDistance(p);
+//        }
+//        return totalDistance;
+//    }
+//
+//    public double getDistance(Patient p) {
+//        double res = 0;
+//        res = Math.sqrt( Math.pow( Math.abs( x - p.getX()), 2) + Math.pow( Math.abs( y - p.getY() ), 2));
+//        return res;
+//    }
 }

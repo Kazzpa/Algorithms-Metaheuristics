@@ -10,6 +10,7 @@ package SimulatedAnnealing;
  * @author kzr
  */
 public class Patient {
+
     public double x;
     public double y;
 
@@ -26,6 +27,7 @@ public class Patient {
         return y;
     }
 
+
     public void setX(double x) {
         this.x = x;
     }
@@ -33,5 +35,6 @@ public class Patient {
     public void setY(double y) {
         this.y = y;
     }
-    
+
+
 }

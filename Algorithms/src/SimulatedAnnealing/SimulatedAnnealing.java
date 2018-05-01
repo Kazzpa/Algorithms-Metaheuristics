@@ -1,18 +1,15 @@
-
 package SimulatedAnnealing;
 
-import java.util.LinkedList;
+import static Principal.Main.*;
 
 /**
  *
  * @author kzr
  */
 public class SimulatedAnnealing {
-    public LinkedList<Doctor> doctors;
-    public LinkedList<Patient> patients;
-    
-    public static void run(){
-        
+
+    public static void run() {
+
         // Set initial temp
         double temp = 10000;
 
@@ -22,51 +19,55 @@ public class SimulatedAnnealing {
         // Initialize intial solution
         Solution currentSolution = new Solution();
         currentSolution.generateIndividual();
-        
+
         System.out.println("Initial solution distance: " + currentSolution.getCost());
 
         // Set as current best
-        Solution best = new Solution(currentSolution.getTour());
-        
+        Solution best = new Solution(currentSolution.getSol());
+
         // Loop until system has cooled
         while (temp > 1) {
             // Create new neighbour tour
-            Tour newSolution = new Tour(currentSolution.getCost());
+            Solution newSolution = new Solution(currentSolution.getSol());
 
-            // Get a random positions in the tour
-            int tourPos1 = (int) (newSolution.tourSize() * Math.random());
-            int tourPos2 = (int) (newSolution.tourSize() * Math.random());
+            // Generamos un doctor aleatorio que no tenga el maximo de pacientes
+            boolean exito = false;
+            int num1 = 0;
+            while (!exito) {
 
-            // Get the cities at selected positions in the tour
-            City citySwap1 = newSolution.getCity(tourPos1);
-            City citySwap2 = newSolution.getCity(tourPos2);
+                num1 = (int) (doctors.size() * Math.random());
+                Doctor d = doctors.get(num1);
+                if (newSolution.puedeAsignar(d)) {
+                    exito = true;
+                }
+            }
+            int num2 = (int) (patients.size() * Math.random());
+            //CAMBIAMOS EL DOCTOR ASIGNADO AL PACIENTE POR EL GENERADO ALEATORIO
+            newSolution.cambiarDoctor(num1, num2);
 
-            // Swap them
-            newSolution.setCity(tourPos2, citySwap1);
-            newSolution.setCity(tourPos1, citySwap2);
-            
             // Get energy of solutions
-            int currentEnergy = currentSolution.getDistance();
-            int neighbourEnergy = newSolution.getDistance();
+            double currentEnergy = currentSolution.getCost();
+            double neighbourEnergy = newSolution.getCost();
 
             // Decide if we should accept the neighbour
             if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
-                currentSolution = new Tour(newSolution.getTour());
+                currentSolution = new Solution(newSolution.getSol());
             }
 
             // Keep track of the best solution found
-            if (currentSolution.getDistance() < best.getDistance()) {
-                best = new Tour(currentSolution.getTour());
+            if (currentSolution.getCost() < best.getCost()) {
+                best = new Solution(currentSolution.getSol());
             }
-            
+
             // Cool system
-            temp *= 1-coolingRate;
+            temp *= 1 - coolingRate;
         }
 
         System.out.println("Final solution distance: " + best.getDistance());
         System.out.println("Tour: " + best);
     }
-    public static double acceptanceProbability(int energy, int newEnergy, double temperature) {
+
+    public static double acceptanceProbability(double energy, double newEnergy, double temperature) {
         // If the new solution is better, accept it
         if (newEnergy < energy) {
             return 1.0;
