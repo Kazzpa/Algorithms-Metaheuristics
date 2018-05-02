@@ -11,11 +11,11 @@ public class SimulatedAnnealing {
     public static void run() {
 
         // Set initial temp
-        double temp = 10000;
+        double temp = 100000;
 
         // Cooling rate
         double coolingRate = 0.003;
-
+        System.out.println("Generar individual");
         // Initialize intial solution
         Solution currentSolution = new Solution();
         currentSolution.generateIndividual();
@@ -24,9 +24,11 @@ public class SimulatedAnnealing {
 
         // Set as current best
         Solution best = new Solution(currentSolution.getSol());
-
+        int i = 0;
         // Loop until system has cooled
         while (temp > 1) {
+           
+            i++;
             // Create new neighbour tour
             Solution newSolution = new Solution(currentSolution.getSol());
 
@@ -57,14 +59,15 @@ public class SimulatedAnnealing {
             // Keep track of the best solution found
             if (currentSolution.getCost() < best.getCost()) {
                 best = new Solution(currentSolution.getSol());
+            
             }
-
-            // Cool system
+                
+            // Cool system when the solution is better
             temp *= 1 - coolingRate;
+
         }
 
-        System.out.println("Final solution distance: " + best.getDistance());
-        System.out.println("Tour: " + best);
+        System.out.println("Final solution distance: " + best.getCost());
     }
 
     public static double acceptanceProbability(double energy, double newEnergy, double temperature) {

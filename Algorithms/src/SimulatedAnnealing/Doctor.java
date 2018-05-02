@@ -17,6 +17,9 @@ public class Doctor {
     public double x;
     public double y;
 
+    public Doctor(){
+        
+    }
     public Doctor(int Sueldo,int numPacientes, double x, double y) {
         this.Salary = Sueldo;
         this.numPacientes = numPacientes;
@@ -43,10 +46,10 @@ public class Doctor {
     public void setSalary(int Salary) {
         this.Salary = Salary;
     }
-//
-//    public void setNumPacientes(int numPacientes) {
-//        this.numPacientes = numPacientes;
-//    }
+
+    public void setNumPacientes(int numPacientes) {
+        this.numPacientes = numPacientes;
+    }
 
     
     public void setX(double x) {

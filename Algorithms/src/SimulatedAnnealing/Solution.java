@@ -7,6 +7,7 @@ package SimulatedAnnealing;
 
 import static Principal.Main.*;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -39,7 +40,32 @@ public class Solution {
 
     public double getCost() {
         double cost = 0;
-        //NEEDS IMPLEMENTATION
+        //costDoctors is the average of the doctors salaries
+        double costDoctors = 0;
+        //costPatients is the average of the distances to the doctor asignated
+        double costPatients = 0;
+        LinkedList doctorAux = new LinkedList();
+        Doctor d;
+        Patient p;
+        for(int i = 0; i < sol.length;i++){
+            p = patients.get(i);
+            for(int j = 0; j < sol[0].length;j++){
+                if(sol[i][j]){
+                    
+                    d = doctors.get(j);
+                    if(!doctorAux.contains(j)){
+                        doctorAux.add(j);
+                        costDoctors += d.getSalary() ;
+                    }
+                    costPatients += Math.sqrt( Math.pow( Math.abs( d.getX() - p.getX()), 2) + Math.pow( Math.abs( d.getY() - p.getY() ), 2));
+                    
+                }
+            }
+        }
+        costDoctors /= doctorAux.size();
+        costPatients /= patients.size();
+        cost = costPatients + costDoctors ;
+        
         return cost;
     }
 
@@ -52,11 +78,9 @@ public class Solution {
         //Asignamos a un paciente un doctor aleatorio
         for (int i = 0; i < numPatients; i++) {
             boolean exito = false;
-
             while (!exito) {
                 num = rnd.nextInt(numDoctors);
                 Doctor d = doctors.get(num);
-
                 if (puedeAsignar(d)) {
                     sol[i][num] = true;
                     exito = true;
@@ -74,7 +98,7 @@ public class Solution {
         int numAsignados = 0;
         boolean exito = false;
         int i = 0;
-        while (!exito && i < patients.size()) {
+        while (i < patients.size()) {
             if (sol[i][x]) {
                 numAsignados++;
             }
