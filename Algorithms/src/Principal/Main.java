@@ -10,11 +10,8 @@ import java.util.Random;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static final int numDoctors = 20;
-    public static final int numPatients = 60;
+    public static final int numDoctors = 80;
+    public static final int numPatients = 240;
 
     //limit atributtes for doctors
     public static final int SALARY_MAX = 100;
@@ -29,20 +26,22 @@ public class Main {
         doctors = new LinkedList<Doctor>();
         patients = new LinkedList<Patient>();
         generateData();
+        SimulatedAnnealing sa = new SimulatedAnnealing();
         //Run simulatedAnealing
         double time0 = System.currentTimeMillis();
-        SimulatedAnnealing.run();
+        sa.run();
         time0 -= System.currentTimeMillis();
+        sa = new SimulatedAnnealing();
         //Run Genetic
         double time1 = System.currentTimeMillis();
 
-        SimulatedAnnealing.run();
+        sa.run();
         time1 -= System.currentTimeMillis();
-
+        sa = new SimulatedAnnealing();
         //Run Memetic
         double time2 = System.currentTimeMillis();
 
-        SimulatedAnnealing.run();
+        sa.run();
         time2 -= System.currentTimeMillis();
         //Compare results
         System.out.println("Simulated annealing calculated in :" + -time0
@@ -62,7 +61,7 @@ public class Main {
             Doctor d = new Doctor();
             rndInt = rnd.nextInt(SALARY_MAX);
             d.setSalary(rndInt);
-            rndInt = rnd.nextInt(PATIENTS_ASSIGNED_MAX)+PATIENTS_ASSIGNED_MIN;
+            rndInt = rnd.nextInt(PATIENTS_ASSIGNED_MAX) + PATIENTS_ASSIGNED_MIN;
             d.setNumPacientes(rndInt);
             rndDouble = rnd.nextDouble() * COORDINATES_MAX;
             d.setX(rndDouble);
@@ -72,7 +71,7 @@ public class Main {
 
         }
         //Data generation for Patients
-        
+
         for (int i = 0; i < numPatients; i++) {
             Patient p = new Patient();
             rndDouble = rnd.nextDouble() * COORDINATES_MAX;

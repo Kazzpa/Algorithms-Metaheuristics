@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SimulatedAnnealing;
 
 import static Principal.Main.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -17,29 +11,33 @@ import java.util.Random;
 //for a solution there must be a doctor assigned to every patient
 public class Solution {
 
-    public boolean[][] sol;
+    public int[] sol;
+    public int[] doctorsAsignated;
+    public int numPatients;
 
     public Solution() {
-        int numPatients = patients.size();
-        int numDoctors = doctors.size();
-        sol = new boolean[numPatients][numDoctors];
+        doctorsAsignated = new int[doctors.size()];
+        sol = new int[patients.size()];
     }
 
-    public Solution(boolean[][] sol) {
-        this.sol = new boolean [sol.length][sol[0].length];
-        for(int i = 0;i < sol.length;i++){
-            for(int j = 0; j < sol[0].length;j++){
-                this.sol[i][j] = sol[i][j];
-            }
-        }
+    public Solution(int[] sol, int[] doctorsASignated) {
+        this.sol = new int[patients.size()];
+        this.doctorsAsignated = new int[doctors.size()];
+        System.arraycopy(sol, 0, this.sol, 0, this.sol.length);
+        System.arraycopy(doctorsASignated, 0, this.doctorsAsignated, 0, this.doctorsAsignated.length);
+        numPatients = patients.size();
     }
 
-    public boolean[][] getSol() {
+    public int[] getSol() {
         return sol;
     }
 
+    public int[] getDoctorsAsignated() {
+        return doctorsAsignated;
+    }
+
     public double getCost() {
-        double cost = 0;
+        double cost;
         //costDoctors is the average of the doctors salaries
         double costDoctors = 0;
         //costPatients is the average of the distances to the doctor asignated
@@ -47,25 +45,25 @@ public class Solution {
         LinkedList doctorAux = new LinkedList();
         Doctor d;
         Patient p;
-        for(int i = 0; i < sol.length;i++){
+        for (int i = 0; i < sol.length; i++) {
             p = patients.get(i);
-            for(int j = 0; j < sol[0].length;j++){
-                if(sol[i][j]){
-                    
-                    d = doctors.get(j);
-                    if(!doctorAux.contains(j)){
-                        doctorAux.add(j);
-                        costDoctors += d.getSalary() ;
-                    }
-                    costPatients += Math.sqrt( Math.pow( Math.abs( d.getX() - p.getX()), 2) + Math.pow( Math.abs( d.getY() - p.getY() ), 2));
-                    
-                }
+
+            d = doctors.get(sol[i]);
+
+            if (!doctorAux.contains(sol[i])) {
+                doctorAux.add(sol[i]);
+                costDoctors += d.getSalary();
             }
+            costPatients += Math.sqrt(Math.pow(Math.abs(d.getX() - p.getX()), 2) + Math.pow(Math.abs(d.getY() - p.getY()), 2));
+
         }
+        //Normalize valors:
         costDoctors /= doctorAux.size();
+        costDoctors /= SALARY_MAX;
         costPatients /= patients.size();
-        cost = costPatients + costDoctors ;
-        
+        costPatients /= Math.sqrt(2 * Math.pow(COORDINATES_MAX, 2));
+        //System.out.print("\tBALANCEADO doctores: "+costDoctors+" \tpacientes: "+costPatients+"\n");
+        cost = costPatients + costDoctors;
         return cost;
     }
 
@@ -73,16 +71,17 @@ public class Solution {
     public void generateIndividual() {
         Random rnd = new Random();
         int num;
-        int numPatients = patients.size();
         int numDoctors = doctors.size();
         //Asignamos a un paciente un doctor aleatorio
-        for (int i = 0; i < numPatients; i++) {
+        for (int i = 0; i < patients.size(); i++) {
             boolean exito = false;
             while (!exito) {
                 num = rnd.nextInt(numDoctors);
                 Doctor d = doctors.get(num);
                 if (puedeAsignar(d)) {
-                    sol[i][num] = true;
+                    doctorsAsignated[num]++;
+                    numPatients++;
+                    sol[i] = num;
                     exito = true;
                 }
 
@@ -95,37 +94,24 @@ public class Solution {
     public boolean puedeAsignar(Doctor d) {
         boolean res = false;
         int x = doctors.indexOf(d);
-        int numAsignados = 0;
-        boolean exito = false;
-        int i = 0;
-        while (i < patients.size()) {
-            if (sol[i][x]) {
-                numAsignados++;
-            }
-
-            i++;
-        }
+//        int numAsignados = 0;
+//        int i = 0;
+//        while (i < numPatients) {
+//            if (sol[i] == x) {
+//                numAsignados++;
+//            }
+//            i++;
+//        }
         //Si el numero de ya asignados es menor al de pacientes maximo
         //puede asignar a un nuevo paciente
-        if (numAsignados < d.getNumPacientes()) {
+        if (doctorsAsignated[x] < d.getNumPacientes()) {
             res = true;
         }
         return res;
     }
 
     void cambiarDoctor(int doctor, int paciente) {
-        //Buscamos cual es el doctor asignado al paciente indicado por el entero
-
-        boolean exito = false;
-        int j = 0;
-        while (!exito && j < sol[0].length) {
-
-            if (sol[paciente][j]) {
-                exito = true;
-                sol[paciente][j] = false;
-            }
-            j++;
-        }
-        sol[paciente][doctor] = true;
+        sol[paciente] = doctor;
+        doctorsAsignated[doctor]++;
     }
 }
