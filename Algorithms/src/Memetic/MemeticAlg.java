@@ -5,6 +5,7 @@
  */
 package Memetic;
 
+import Principal.Population;
 import Principal.Solution;
 import java.util.Random;
 import SimulatedAnnealing.*;
@@ -53,41 +54,41 @@ public class MemeticAlg {
     public static boolean BEST = true;
 
     public static void main(String[] args) {
-        Population pop = new Population(numCities);
-        pop.initializePopulationRandomly(POPULATION_SIZE);
-        for (int i = 0; i < NUM_EVOLUTION_ITERATIONS; i++) {
-            pop = pop.evolve();
-            if (i % 3 == 0) {
-                System.out.println("Finished Iteration: " + i + ". Best Solution: " + pop.getBestIndividualInPop());
-            }
-
-            LocalSearch(pop,i);
-
-        }
-        System.out.println("BEST SOLUTION:");
-        System.out.println(pop.getBestIndividualInPop());
+//        Population pop = new Population(numCities);
+//        pop.initializePopulationRandomly(POPULATION_SIZE);
+//        for (int i = 0; i < NUM_EVOLUTION_ITERATIONS; i++) {
+//            pop = pop.evolve();
+//            if (i % 3 == 0) {
+//                System.out.println("Finished Iteration: " + i + ". Best Solution: " + pop.getBestIndividualInPop());
+//            }
+//
+//            LocalSearch(pop,i);
+//
+//        }
+//        System.out.println("BEST SOLUTION:");
+//        System.out.println(pop.getBestIndividualInPop());
     }
 
     public static void LocalSearch(Population pop,int gen) {
-        if (gen % GENERATIONLOCALSEARCH == 0) {
-            if (BEST) {
-                int i;
-                for (i = 0; i < RATELOCALSEARCH * POPULATION_SIZE; i++) {
-                    Solution ind = pop.individuals.get(i);
-                    SimulatedAnnealing(ind);
-                }
-            } else {
-                int i;
-                Random rnd = new Random();
-                for (i = 0; i < POPULATION_SIZE; i++) {
-                    if (rnd.nextDouble() < RATELOCALSEARCH) {
-                        Solution ind = pop.individuals.get(i);
-                        SimulatedAnnealing(ind);
-                    }
-                }
-
-            }
-        }
+//        if (gen % GENERATIONLOCALSEARCH == 0) {
+//            if (BEST) {
+//                int i;
+//                for (i = 0; i < RATELOCALSEARCH * POPULATION_SIZE; i++) {
+//                    Solution ind = pop.individuals.get(i);
+//                    SimulatedAnnealing(ind);
+//                }
+//            } else {
+//                int i;
+//                Random rnd = new Random();
+//                for (i = 0; i < POPULATION_SIZE; i++) {
+//                    if (rnd.nextDouble() < RATELOCALSEARCH) {
+//                        Solution ind = pop.individuals.get(i);
+//                        SimulatedAnnealing(ind);
+//                    }
+//                }
+//
+//            }
+//        }
     }
     public static void SimulatedAnnealing(Solution s){
         SimulatedAnnealing sa = new SimulatedAnnealing();

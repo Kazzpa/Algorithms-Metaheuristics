@@ -8,12 +8,13 @@ import java.util.Random;
  *
  * @author kzr
  */
-//for a solution there must be a doctor assigned to every patient
+//for a solution a patient must have asigned a doctor
 public class Solution {
 
+    //Array de entero que indica que doctor esta asignado a cada paciente
     public int[] sol;
+    //Array que indica cuantos pacientes tiene cada doctor
     public int[] doctorsAsignated;
-    public int numPatients;
 
     public Solution() {
         doctorsAsignated = new int[doctors.size()];
@@ -25,7 +26,6 @@ public class Solution {
         this.doctorsAsignated = new int[doctors.size()];
         System.arraycopy(sol, 0, this.sol, 0, this.sol.length);
         System.arraycopy(doctorsASignated, 0, this.doctorsAsignated, 0, this.doctorsAsignated.length);
-        numPatients = patients.size();
     }
 
     public int[] getSol() {
@@ -62,8 +62,7 @@ public class Solution {
         costDoctors /= SALARY_MAX;
         costPatients /= patients.size();
         costPatients /= Math.sqrt(2 * Math.pow(COORDINATES_MAX, 2));
-        //System.out.print("\tBALANCEADO doctores: "+costDoctors+" \tpacientes: "+costPatients+"\n");
-        cost = costPatients + costDoctors;
+        cost = (costPatients + costDoctors) * 10000;
         return cost;
     }
 
@@ -80,7 +79,6 @@ public class Solution {
                 Doctor d = doctors.get(num);
                 if (puedeAsignar(d)) {
                     doctorsAsignated[num]++;
-                    numPatients++;
                     sol[i] = num;
                     exito = true;
                 }
@@ -90,20 +88,10 @@ public class Solution {
     }
 
     //Comprobamos si un doctor puede asignar a un nuevo paciente
-    // comprobando cuantos pacientes tiene ya asignado y a cuantos puede asignar
     public boolean puedeAsignar(Doctor d) {
         boolean res = false;
         int x = doctors.indexOf(d);
-//        int numAsignados = 0;
-//        int i = 0;
-//        while (i < numPatients) {
-//            if (sol[i] == x) {
-//                numAsignados++;
-//            }
-//            i++;
-//        }
-        //Si el numero de ya asignados es menor al de pacientes maximo
-        //puede asignar a un nuevo paciente
+        //consulta el array de doctores para ver si excede el limite que tiene
         if (doctorsAsignated[x] < d.getNumPacientes()) {
             res = true;
         }

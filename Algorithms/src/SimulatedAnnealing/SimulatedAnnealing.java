@@ -57,7 +57,7 @@ public class SimulatedAnnealing {
                 System.out.println("Aceptada");
                 currentSolution = new Solution(newSolution.getSol(), newSolution.getDoctorsAsignated());
             }
-
+            
             // Keep track of the best solution found
             if (currentSolution.getCost() < best.getCost()) {
                 best = new Solution(currentSolution.getSol(), currentSolution.getDoctorsAsignated());
@@ -79,8 +79,7 @@ public class SimulatedAnnealing {
         }
         //System.out.println("energy:" +energy+" newEnergy:"+ newEnergy +" temp:"+ temperature+"calculated: "+Math.exp(((energy - newEnergy) *1000)/ temperature));
         // If the new solution is worse, calculate an acceptance probability
-        //return Math.exp(((energy - newEnergy) *1000)/ temperature);
-        
+        System.out.println(Math.exp(((energy - newEnergy) ) / temperature));
         return Math.exp((energy - newEnergy) / temperature);
     }
     public void run(Solution s){
