@@ -1,7 +1,8 @@
 package SimulatedAnnealing;
 
+import Principal.Doctor;
+import Principal.Solution;
 import static Principal.Main.*;
-
 /**
  *
  * @author kzr
@@ -81,5 +82,8 @@ public class SimulatedAnnealing {
         //return Math.exp(((energy - newEnergy) *1000)/ temperature);
         
         return Math.exp((energy - newEnergy) / temperature);
+    }
+    public void run(Solution s){
+        run();
     }
 }

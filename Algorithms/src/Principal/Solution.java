@@ -1,4 +1,4 @@
-package SimulatedAnnealing;
+package Principal;
 
 import static Principal.Main.*;
 import java.util.LinkedList;
@@ -110,7 +110,7 @@ public class Solution {
         return res;
     }
 
-    void cambiarDoctor(int doctor, int paciente) {
+    public void cambiarDoctor(int doctor, int paciente) {
         sol[paciente] = doctor;
         doctorsAsignated[doctor]++;
     }
