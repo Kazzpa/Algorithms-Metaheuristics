@@ -78,7 +78,10 @@ public class SimulatedAnnealing {
         }
         if (!memetic) {
 
-            System.out.println("Final solution distance: " + best.getCost());
+            System.out.println("Final solution distance: " + best.getCost()
+            +  "\nCoste medicos: "+ best.getDinero()+ "\tDistancia "
+            + "total: "+ best.getDistancia());
+            
         }
     }
 
@@ -93,10 +96,10 @@ public class SimulatedAnnealing {
     }
 
     public void run(Solution s) {
-        System.out.println("Busqueda ini");
+        //System.out.println("Busqueda ini");
         memetic = true;
         memSol = s;
         run();
-        System.out.print("Busquedafin");
+        //System.out.print("Busquedafin");
     }
 }

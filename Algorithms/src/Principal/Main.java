@@ -25,14 +25,15 @@ public class Main {
     public static final int NUM_PATIENTS = 240;
 
     //DOCTORS
-    public static final int SALARY_MAX = 100;
-    public static final int PATIENTS_ASSIGNED_MAX = 10;
-    public static final int PATIENTS_ASSIGNED_MIN = 6;
+    public static final int SALARY_MAX = 3400;
+    public static final int SALARY_MIN = 1400;
+    public static final int PATIENTS_ASSIGNED_MAX = 3;
+    public static final int PATIENTS_ASSIGNED_MIN =1+(int) NUM_PATIENTS/NUM_DOCTORS;
     //EL NUMERO REAL MAXIMO DE ASIGNADOS SERA MIN+MAX
     //PATIENTS
     public static final int COORDINATES_MAX = 100;
     //Importance given to COST OF DOCTORS AND TO COST OF PATIENTS (DISTANCE)
-    public static final double DOCTORS_COST_RATE = 0.5;
+    public static final double DOCTORS_COST_RATE = 0.80;
     public static final double PATIENTS_COST_RATE = 1 - DOCTORS_COST_RATE;
     //Atributtes for Population Algorithms
 
@@ -113,7 +114,7 @@ public class Main {
         //Data generation for Doctors
         for (int i = 0; i < NUM_DOCTORS; i++) {
             Doctor d = new Doctor();
-            rndInt = rnd.nextInt(SALARY_MAX);
+            rndInt = rnd.nextInt(SALARY_MAX)+SALARY_MIN;
             d.setSalary(rndInt);
             rndInt = rnd.nextInt(PATIENTS_ASSIGNED_MAX) + PATIENTS_ASSIGNED_MIN;
             d.setNumPacientes(rndInt);

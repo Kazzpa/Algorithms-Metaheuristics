@@ -16,8 +16,6 @@ import SimulatedAnnealing.SimulatedAnnealing;
  */
 public class GeneticAlg {
 
-    
-
     public void run() {
         Population pop = new Population();
         pop.initializePopulationRandomly(Main.POPULATION_SIZE);
@@ -28,7 +26,10 @@ public class GeneticAlg {
             }
 
         }
-        System.out.println("\nGenetic Algorithm:\nFinal solution: "+pop.getBestIndividualInPop().getCost());
+        Solution best = pop.getBestIndividualInPop();
+        System.out.println("\nGenetic Algorithm:\nFinal solution: " + best.getCost()
+                + "\nCoste medicos: " + best.getDinero() + "\tDistancia "
+                + "total: " + best.getDistancia());
     }
 
 }

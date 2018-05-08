@@ -47,8 +47,11 @@ public class MemeticAlg {
             }
             LocalSearch(pop,i);
         }
-        System.out.println("\nMemetic Algorithm \nFinal solution: " + pop.getBestIndividualInPop().getCost());
-
+        
+        Solution best = pop.getBestIndividualInPop();
+        System.out.println("\nMemetic Algorithm:\nFinal solution: " + best.getCost()
+                + "\nCoste medicos: " + best.getDinero() + "\tDistancia "
+                + "total: " + best.getDistancia());
     }
 
     public static void LocalSearch(Population pop, int gen) {

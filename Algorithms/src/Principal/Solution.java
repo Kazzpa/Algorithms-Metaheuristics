@@ -62,11 +62,43 @@ public class Solution {
         costDoctors /= SALARY_MAX;
         costPatients /= patients.size();
         costPatients /= Math.sqrt(2 * Math.pow(COORDINATES_MAX, 2));
-        cost = ((costPatients /** Main.PATIENTS_COST_RATE*/) + (costDoctors /* Main.DOCTORS_COST_RATE*/));
+        cost = ((costPatients * Main.PATIENTS_COST_RATE) + (costDoctors * Main.DOCTORS_COST_RATE));
         //System.out.println(cost);
         return cost;
     }
+    public double getDinero(){
+        double res = 0;
+        LinkedList doctorAux = new LinkedList();
+        Doctor d;
+        Patient p;
+        for (int i = 0; i < sol.length; i++) {
+            p = patients.get(i);
 
+            d = doctors.get(sol[i]);
+
+            if (!doctorAux.contains(sol[i])) {
+                doctorAux.add(sol[i]);
+                res += d.getSalary();
+            }
+            
+
+        }
+        return res;
+    }
+    public double getDistancia(){
+        double res = 0;
+        Doctor d;
+        Patient p;
+        for (int i = 0; i < sol.length; i++) {
+            p = patients.get(i);
+
+            d = doctors.get(sol[i]);
+
+            res += Math.sqrt(Math.pow(Math.abs(d.getX() - p.getX()), 2) + Math.pow(Math.abs(d.getY() - p.getY()), 2));
+
+        }
+        return res;
+    }
     //We need to asignate a doctor to every patient
     public void generateIndividual() {
         Random rnd = new Random();
