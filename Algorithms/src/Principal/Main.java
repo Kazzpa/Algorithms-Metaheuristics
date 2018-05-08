@@ -1,5 +1,7 @@
 package Principal;
 
+import Genetic.GeneticAlg;
+import Memetic.MemeticAlg;
 import SimulatedAnnealing.*;
 import java.util.LinkedList;
 import java.util.Random;
@@ -10,25 +12,32 @@ import java.util.Random;
  */
 public class Main {
 
+    //DEBUG:
+    public static int error = 0;
+    //DEBUG
+    //SELECT WHICH ALGORITHMS DO YOU WANT TO EXECUTE
+    public static final boolean EXECUTE_SA = true;
+    public static final boolean EXECUTE_GA = true;
+    public static final boolean EXECUTE_MA = true;
+
+    //GENERATE DATA ATRIBUTTES
     public static final int NUM_DOCTORS = 80;
     public static final int NUM_PATIENTS = 240;
 
-    //limit atributtes for doctors
+    //DOCTORS
     public static final int SALARY_MAX = 100;
-    public static final int PATIENTS_ASSIGNED_MAX = 6;
-    public static final int PATIENTS_ASSIGNED_MIN = 3;
+    public static final int PATIENTS_ASSIGNED_MAX = 10;
+    public static final int PATIENTS_ASSIGNED_MIN = 6;
     //EL NUMERO REAL MAXIMO DE ASIGNADOS SERA MIN+MAX
-    //Atributtes for Patients
+    //PATIENTS
     public static final int COORDINATES_MAX = 100;
+    //Importance given to COST OF DOCTORS AND TO COST OF PATIENTS (DISTANCE)
+    public static final double DOCTORS_COST_RATE = 0.5;
+    public static final double PATIENTS_COST_RATE = 1 - DOCTORS_COST_RATE;
     //Atributtes for Population Algorithms
-//    public static final int POPULATION_SIZE = 30;
-//    public static final double ELITE_PERCENT = 0.10;
-//    public static final double MUTATION_RATE = 0.01;
-//    public static double ELITE_PARENT_RATE = 0.01;
-//    public static int TOURNAMENT_SIZE = 5;
-    
-    public static final int POPULATION_SIZE = 100;
-    public static final int NUM_EVOLUTION_ITERATIONS = 100;
+
+    public static final int POPULATION_SIZE = 20;
+    public static final int NUM_EVOLUTION_ITERATIONS = 20;
 
     // When selecting two parents, we want the "fittest" parents to reproduce
     // This is done by randomly selecting X individuals in the population and 
@@ -37,7 +46,7 @@ public class Main {
     public static double TOURNAMENT_SIZE_PCT = 0.1;
     public static int TOURNAMENT_SIZE = (int) (POPULATION_SIZE * TOURNAMENT_SIZE_PCT);
     // The probability a specific individual undergoes a single mutation
-    public static double MUTATION_RATE = 0.5;
+    public static double MUTATION_RATE = 0.50;
     // Probability of skipping crossover and using the best parent
     public static double CLONE_RATE = 0.01;
     // Elite percent is what we define as "high" fit individuals
@@ -48,11 +57,11 @@ public class Main {
     public static double EPSILON = 0.02;
     //Numero de iteraciones en las que se mejora
     public static int GENERATIONLOCALSEARCH = 10;
-    //Porcentaje de individuos a los que se aplica la mejora local
-    public static double RATELOCALSEARCH = 0.1;
-    //saber si se aplica al top o a unos individuos aleatorios
-    public static boolean BEST = true;
-    
+    //PORCENTAJE DE INDIVIDUOS A LOS QUE SE LE APLICA LA LOCALSEARCH
+    public static double LOCALSEARCH_RATE = 0.1;
+    //SE APLICA AL PORCENTAJE DE INDIVIDUOS MEJORES O RANDOM
+    public static boolean LOCALSEARCH_BEST = true;
+
     public static LinkedList<Doctor> doctors;
     public static LinkedList<Patient> patients;
 
@@ -61,26 +70,38 @@ public class Main {
         patients = new LinkedList<Patient>();
         generateData();
         SimulatedAnnealing sa = new SimulatedAnnealing();
-        //Run simulatedAnealing
-        double time0 = System.currentTimeMillis();
-        sa.run();
-        time0 -= System.currentTimeMillis();
-        sa = new SimulatedAnnealing();
-        //Run Genetic
-        double time1 = System.currentTimeMillis();
+        GeneticAlg ga = new GeneticAlg();
+        MemeticAlg ma = new MemeticAlg();
+        double time0, time1, time2;
+        if (EXECUTE_SA) {
+            //Run simulatedAnealing
+            time0 = System.currentTimeMillis();
+            sa.run();
+            time0 -= System.currentTimeMillis();
+        }
+        if (EXECUTE_GA) {
+            //RUN genetic
+            time1 = System.currentTimeMillis();
+            ga.run();
+            time1 -= System.currentTimeMillis();
+        }
+        if (EXECUTE_MA) {
 
-        //sa.run();
-        time1 -= System.currentTimeMillis();
-        sa = new SimulatedAnnealing();
-        //Run Memetic
-        double time2 = System.currentTimeMillis();
-
-        time2 -= System.currentTimeMillis();
+            //Run Memetic
+            time2 = System.currentTimeMillis();
+            ma.run();
+            time2 -= System.currentTimeMillis();
+        }
         //Compare results
-        System.out.println("Simulated annealing calculated in :" + -time0
-                + "\nGenetic solution calculated in : " + -time1 + "\nMemetic "
-                + "solution calculated in : " + -time2);
-
+        System.out.println();
+        if (EXECUTE_SA) {
+            System.out.println("Simulated annealing calculated in :" + -time0);
+        }
+        if (EXECUTE_GA) {
+            System.out.println("Genetic solution calculated in : " + -time1);
+        }
+        System.out.println("Memetic solution calculated in : " + -time2);
+        System.out.println("errores" + error);
     }
 
     //GENERATES THE DATA OF THE DOCTORS AND PATIENTS

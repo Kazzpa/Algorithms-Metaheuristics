@@ -10,12 +10,7 @@ import java.util.Random;
 public class Population {
 
     public ArrayList<Solution> solutions = new ArrayList<Solution>();
-    private int num;
     private ArrayList<Solution> sorted;
-
-    public Population(int numCities) {
-        this.num = numCities;
-    }
 
     public void initializePopulationRandomly(int numSolutions) {  //la primera generacion debe iniciarse, lo hacemos de forma random
         for (int i = 0; i < numSolutions; i++) {
@@ -34,9 +29,8 @@ public class Population {
     public Population evolve() {    //en el evolve hacemos para saber que individuos pasan a la siguiente generacion
         // STEP 1: Select the best fit (elitism)
         sorted = new ArrayList<Solution>();
-        Population nextGenPop = new Population(this.num);
+        Population nextGenPop = new Population();
         int populationSpaceAvailable = solutions.size();
-
         for (int i = 0; i < Main.POPULATION_SIZE; i++) { //Aqui ordenamos los individuos de la poblacion de menor a peor coste (nos interesa minimizar)
             double bestCost = Double.MAX_VALUE;
             int bestIndex = -1;
@@ -55,8 +49,8 @@ public class Population {
         --populationSpaceAvailable;
         // Add "top" individuals to the next generation
         int numElite = (int) (Main.POPULATION_SIZE * Main.ELITE_PERCENT);
-        for (int i = 0; i < numElite + 1; i++) {    //parte de elitismo, el numElite +1 es porque el 0 se mantiene en la lista y quiero no tenerlo en cuenta
-            if (i != 0) {   //la posicion 0 (el mejor) no se contempla para la mutacion
+        for (int i = 1; i < numElite; i++) {    //parte de elitismo, el numElite +1 es porque el 0 se mantiene en la lista y quiero no tenerlo en cuenta
+            
                 if (Math.random() < Main.MUTATION_RATE) {
                     nextGenPop.solutions.add(mutate(sorted.get(i)));
                     nextGenPop.solutions.get(nextGenPop.solutions.size() - 1).getCost();  //esto no sirve para nada
@@ -65,21 +59,19 @@ public class Population {
                     nextGenPop.solutions.get(nextGenPop.solutions.size() - 1).getCost();
                 }
                 populationSpaceAvailable--;
-            }
+            
         }
-
         // STEP 2: Select 2 parents from population and generate children
         while (populationSpaceAvailable > 0) {  //parte de torneo
+            
             // STEP 2: Create offspring given two parents (genetic crossover)
             Solution p1 = selectParentViaTournament();
             Solution p2 = selectParentViaTournament();
             Solution child = crossover(p1, p2);
-
             // STEP 3: Add mutations
             if (Math.random() < Main.MUTATION_RATE) {
                 mutate(child);
             }
-
             child.getCost();
             nextGenPop.solutions.add(child);
             populationSpaceAvailable--;
@@ -92,35 +84,55 @@ public class Population {
 
     //Mutacion sera a un paciente aleatorio cambiar el doctor que se le asigna
     //de esta manera cambia el valor del coste doctores y el de paciente
-    public Solution mutate(Solution ind) {
-        int num1 = (int) Math.random() * Main.NUM_PATIENTS;
+    public Solution mutate(Solution sol) {
+        int num1 = -1;
         int num2 = -1;
         boolean exito = false;
+        //ANTES SE LE ASIGNABA UN PACIENTE
         while (!exito) {
+            num1 = (int) Math.random() * Main.NUM_PATIENTS;
             num2 = (int) Math.random() * Main.NUM_DOCTORS;
             Doctor d = Main.doctors.get(num2);
-            if (ind.puedeAsignar(d)) {
+            if (sol.puedeAsignar(d)) {
                 exito = true;
+            }else{
+                System.out.println("Error MUTATE");
+                Main.error++;
             }
         }
-        ind.doctorsAsignated[ind.sol[num1]]--;
-        ind.cambiarDoctor(num2, num1);
+        sol.doctorsAsignated[sol.sol[num1]]--;
+        sol.cambiarDoctor(num2, num1);
 
-        return ind;
+        return sol;
     }
 
-    public Solution crossover(Solution p1, Solution p2) { 
-    //genera un hijo entre el padre y la madre
-    //Si ocurre que no puede recibir los genes ni de la madre ni del padre pq 
-    // no cumple el maximo de pacientes asignados a un doctor
-    // asigna a esos pacientes un doctor aleatorio que se le pueda asignar
+    public Solution crossover(Solution p1, Solution p2) {
+        //genera un hijo entre el padre y la madre
+        //Si ocurre que no puede recibir los genes ni de la madre ni del padre pq 
+        // no cumple el maximo de pacientes asignados a un doctor
+        // asigna a esos pacientes un doctor aleatorio que se le pueda asignar
         Solution child = new Solution();
         int mid = (int) Main.NUM_PATIENTS / 2;
         for (int i = 0; i < mid / 2; i++) {
             child.sol[i] = p1.sol[i];
+            child.doctorsAsignated[child.sol[i]]++;
         }
+        //A partir de aqui pueden haber problemas
         for (int j = mid; j < Main.NUM_PATIENTS; j++) {
-            
+            Doctor d = Main.doctors.get(p1.sol[j]);
+            if (child.puedeAsignar(d)) {
+
+                child.sol[j] = p1.sol[j];
+
+            } else {
+                Main.error++;
+                d = Main.doctors.get(p2.sol[j]);
+                if (child.puedeAsignar(d)) {
+                    child.sol[j] = p2.sol[j];
+                } else {
+                    Main.error++;
+                }
+            }
         }
         return child;
     }

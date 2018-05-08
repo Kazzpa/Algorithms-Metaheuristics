@@ -62,7 +62,8 @@ public class Solution {
         costDoctors /= SALARY_MAX;
         costPatients /= patients.size();
         costPatients /= Math.sqrt(2 * Math.pow(COORDINATES_MAX, 2));
-        cost = (costPatients + costDoctors) * 10000;
+        cost = ((costPatients /** Main.PATIENTS_COST_RATE*/) + (costDoctors /* Main.DOCTORS_COST_RATE*/));
+        //System.out.println(cost);
         return cost;
     }
 

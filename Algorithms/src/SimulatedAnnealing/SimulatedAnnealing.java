@@ -3,11 +3,15 @@ package SimulatedAnnealing;
 import Principal.Doctor;
 import Principal.Solution;
 import static Principal.Main.*;
+
 /**
  *
  * @author kzr
  */
 public class SimulatedAnnealing {
+
+    public boolean memetic = false;
+    Solution memSol = null;
 
     public void run() {
 
@@ -15,13 +19,17 @@ public class SimulatedAnnealing {
         double temp = 100000;
 
         // Cooling rate
-        double coolingRate = 0.003;
-        System.out.println("Generar individual");
+        double coolingRate = 0.03;
         // Initialize intial solution
+
         Solution currentSolution = new Solution();
         currentSolution.generateIndividual();
-
-        System.out.println("Initial solution distance: " + currentSolution.getCost());
+        if (memetic) {
+            currentSolution = memSol;
+        }
+        if (!memetic) {
+            System.out.println("SimulatedAnnealing:\nInitial solution distance: " + currentSolution.getCost());
+        }
 
         // Set as current best
         Solution best = new Solution(currentSolution.getSol(), currentSolution.getDoctorsAsignated());
@@ -53,11 +61,11 @@ public class SimulatedAnnealing {
             double neighbourEnergy = newSolution.getCost();
 
             // Decide if we should accept the neighbour
-            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) < Math.random()) {
-                System.out.println("Aceptada");
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) >= Math.random()) {
+                //System.out.println("Aceptada");
                 currentSolution = new Solution(newSolution.getSol(), newSolution.getDoctorsAsignated());
             }
-            
+
             // Keep track of the best solution found
             if (currentSolution.getCost() < best.getCost()) {
                 best = new Solution(currentSolution.getSol(), currentSolution.getDoctorsAsignated());
@@ -68,8 +76,10 @@ public class SimulatedAnnealing {
             temp *= 1 - coolingRate;
 
         }
+        if (!memetic) {
 
-        System.out.println("Final solution distance: " + best.getCost());
+            System.out.println("Final solution distance: " + best.getCost());
+        }
     }
 
     public static double acceptanceProbability(double energy, double newEnergy, double temperature) {
@@ -77,12 +87,16 @@ public class SimulatedAnnealing {
         if (newEnergy < energy) {
             return 1.0;
         }
-        //System.out.println("energy:" +energy+" newEnergy:"+ newEnergy +" temp:"+ temperature+"calculated: "+Math.exp(((energy - newEnergy) *1000)/ temperature));
         // If the new solution is worse, calculate an acceptance probability
-        System.out.println(Math.exp(((energy - newEnergy) ) / temperature));
+        //System.out.println(Math.exp(((energy - newEnergy) ) / temperature));
         return Math.exp((energy - newEnergy) / temperature);
     }
-    public void run(Solution s){
+
+    public void run(Solution s) {
+        System.out.println("Busqueda ini");
+        memetic = true;
+        memSol = s;
         run();
+        System.out.print("Busquedafin");
     }
 }
