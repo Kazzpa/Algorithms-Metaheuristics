@@ -25,33 +25,22 @@ public class MemeticAlg {
     public static boolean BEST = true;
 
     public static void run() {
-//        Population pop = new Population(numCities);
-//        pop.initializePopulationRandomly(POPULATION_SIZE);
-//        for (int i = 0; i < NUM_EVOLUTION_ITERATIONS; i++) {
-//            pop = pop.evolve();
-//            if (i % 3 == 0) {
-//                System.out.println("Finished Iteration: " + i + ". Best Solution: " + pop.getBestIndividualInPop());
-//            }
-//
-//            LocalSearch(pop,i);
-//
-//        }
-//        System.out.println("BEST SOLUTION:");
-//        System.out.println(pop.getBestIndividualInPop());
         Population pop = new Population();
         pop.initializePopulationRandomly(Main.POPULATION_SIZE);
         for (int i = 0; i < Main.NUM_EVOLUTION_ITERATIONS; i++) {
             pop = pop.evolve();
-            if (i % 3 == 0) {
-                //System.out.println("Finished Iteration: " + i + ". Best Solution: " + pop.getBestIndividualInPop().getCost());
+            if (i % 3 == 0&& Main.PRINT_ITERATION) {
+                System.out.println("Finished Iteration: " + i + ". Best Solution: " + pop.getBestIndividualInPop().getCost());
             }
             LocalSearch(pop,i);
         }
         
         Solution best = pop.getBestIndividualInPop();
         System.out.println("\nMemetic Algorithm:\nFinal solution: " + best.getCost()
-                + "\nCoste medicos: " + best.getDinero() + "\tDistancia "
-                + "total: " + best.getDistancia());
+                + "\nCoste medicos: "  + best.getDinero() + " €\tDistancia "
+                    + "total: " + best.getDistancia() + " km");
+        if(Main.PRINT_BEST)
+            System.out.println("Mejor solucion: "+ best.toString());
     }
 
     public static void LocalSearch(Population pop, int gen) {

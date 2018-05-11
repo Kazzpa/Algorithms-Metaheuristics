@@ -15,17 +15,19 @@ public class Solution {
     public int[] sol;
     //Array que indica cuantos pacientes tiene cada doctor
     public int[] doctorsAsignated;
+    public double cost;
 
     public Solution() {
         doctorsAsignated = new int[doctors.size()];
         sol = new int[patients.size()];
     }
 
-    public Solution(int[] sol, int[] doctorsASignated) {
+    public Solution(int[] sol, int[] doctorsASignated, double cost) {
         this.sol = new int[patients.size()];
         this.doctorsAsignated = new int[doctors.size()];
         System.arraycopy(sol, 0, this.sol, 0, this.sol.length);
         System.arraycopy(doctorsASignated, 0, this.doctorsAsignated, 0, this.doctorsAsignated.length);
+        this.cost = cost;
     }
 
     public int[] getSol() {
@@ -36,11 +38,9 @@ public class Solution {
         return doctorsAsignated;
     }
 
-    public double getCost() {
-        double cost;
-        //costDoctors is the average of the doctors salaries
+    public void calculateCost() {
+
         double costDoctors = 0;
-        //costPatients is the average of the distances to the doctor asignated
         double costPatients = 0;
         LinkedList doctorAux = new LinkedList();
         Doctor d;
@@ -63,10 +63,14 @@ public class Solution {
         costPatients /= patients.size();
         costPatients /= Math.sqrt(2 * Math.pow(COORDINATES_MAX, 2));
         cost = ((costPatients * Main.PATIENTS_COST_RATE) + (costDoctors * Main.DOCTORS_COST_RATE));
-        //System.out.println(cost);
+
+    }
+
+    public double getCost() {
         return cost;
     }
-    public double getDinero(){
+
+    public double getDinero() {
         double res = 0;
         LinkedList doctorAux = new LinkedList();
         Doctor d;
@@ -80,12 +84,12 @@ public class Solution {
                 doctorAux.add(sol[i]);
                 res += d.getSalary();
             }
-            
 
         }
         return res;
     }
-    public double getDistancia(){
+
+    public double getDistancia() {
         double res = 0;
         Doctor d;
         Patient p;
@@ -99,6 +103,7 @@ public class Solution {
         }
         return res;
     }
+
     //We need to asignate a doctor to every patient
     public void generateIndividual() {
         Random rnd = new Random();
@@ -118,6 +123,7 @@ public class Solution {
 
             }
         }
+        calculateCost();
     }
 
     //Comprobamos si un doctor puede asignar a un nuevo paciente
@@ -134,5 +140,16 @@ public class Solution {
     public void cambiarDoctor(int doctor, int paciente) {
         sol[paciente] = doctor;
         doctorsAsignated[doctor]++;
+    }
+
+    public String toString() {
+        String str = "Paciente: \n";
+        for (int i = 0; i < sol.length; i++) {
+            str += sol[i] + ",\t";
+            if(i % 15 == 0&&i!= 0){
+                str+= "\n";
+            }
+        }
+        return str;
     }
 }
