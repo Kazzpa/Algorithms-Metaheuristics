@@ -1,5 +1,7 @@
 # Algorithms-Metaheuritics
 **A project made for the college where we solve a problem using 3 different algorithms and we study how far do they get and which one gets the best solution**  
+## Inactive repository  
+This repository was a college project where we learned about different metaheuristics algorithms and we needed to create different approachs to a single problem, I developed most of the code, which is based on the classes notes. I can remember there was a problem with one of the algorithms so **don't take this as an example**  
 # Code
 Its core implementation its [here](/Algorithms/src/Principal)
 - Solution: its 1 array that show which doctor is the patient assigned, and an auxiliar array which shows how many patients does a doctor have assigned so we can check their limit easily.
